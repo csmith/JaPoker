@@ -287,7 +287,7 @@ public abstract class AbstractGame implements Game, Runnable {
     protected void doBigBlind(final Player player) {
         player.forceBet(bigblind);
         
-        notifyPlaceBlind(player, bigblind / 2, "big blind");
+        notifyPlaceBlind(player, bigblind, "big blind");
     }
     
     @SuppressWarnings("fallthrough")
@@ -442,23 +442,16 @@ public abstract class AbstractGame implements Game, Runnable {
         // tempPlayers is a list of everyone involved in the round
         List<Player> tempPlayers = new ArrayList<Player>();
         Map<Player, Integer> playerBets = new HashMap<Player, Integer>();
+        int maxbet = 0;
         
         for (Player player : players) {
             if (!player.isOut()) {
                 tempPlayers.add(player);
                 
-                if (doHalf) {
-                    playerBets.put(player, player.getBet() / 2);
-                } else {
-                    playerBets.put(player, player.getBet());
-                }
-            }
-        }
-        
-        int maxbet = 0;
-        for (Integer bet : playerBets.values()) {
-            if (bet > maxbet) {
-                maxbet = bet;
+                final int bet = doHalf ? player.getBet() / 2 : player.getBet();
+                
+                playerBets.put(player, bet);
+                maxbet = Math.max(bet, maxbet);
             }
         }
         
