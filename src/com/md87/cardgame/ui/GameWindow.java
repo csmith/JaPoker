@@ -40,66 +40,108 @@ import javax.swing.JFrame;
  */
 public class GameWindow extends JFrame implements GameObserver, MouseListener, KeyListener {
 
+    /**
+     * A version number for this class. It should be changed whenever the class
+     * structure is changed (or anything else that would prevent serialized
+     * objects being unserialized with the new class).
+     */
     private static final long serialVersionUID = 1;
 
+    /** The delay between events for the "fast" speed. */
     public final static int SPEED_FAST = 200;
+    /** The delay between events for the "normal" speed. */
     public final static int SPEED_NORMAL = 1000;
+    /** The delay between events for the "slow" speed. */
     public final static int SPEED_SLOW = 5000;
 
+    /** The initial width of the window. */
     private final static int WIDTH = 800;
+    /** The initial height of the window. */
     private final static int HEIGHT = 600;
 
+    /** The number of buttons shown on each side. */
     private final static int NUM_BUTTONS = 4;
 
+    /** The width of buttons. */
     private final static int BUTTON_WIDTH = 100;
+    /** The height of buttons. */
     private final static int BUTTON_HEIGHT = 25;
-    private final static int BUTTON_OFFSET = 25;
+    /** The offset from the screen edge of the buttons. */
+    private final static int BUTTON_OFFSET = 15;
+    /** The space between each button. */
     private final static int BUTTON_SPACER = 10;
 
+    /** The width of the cards in use. */
     private int cardWidth = 71;
+    /** The height of the cards in use. */
     private int cardHeight = 96;
+    /** The space between each card. */
     private final static int CARD_SPACER = 4;
 
+    /** The horizontal offset of the community ccards. */
     private int communityOffset = 150;
+    /** The offset of each community card from the others if there's enough space. */
     private int cardLargeOffset = cardWidth + CARD_SPACER;
+    /** The offset of each community card from the others if there's not enough space. */
     private int cardShortOffset = 25;
-
+    /** The amount of space required to use the large offset. */
     private int communityMinSize = 2 * communityOffset + 6 * cardWidth + 5 * CARD_SPACER;
 
+    /** The background colour to use. */
     private Color backgroundColour = new Color(0, 100, 0);
 
+    /** The current speed. */
     private int speed = SPEED_NORMAL;
 
-    private Game game;
+    /** The game we're playing. */
+    private final Game game;
 
+    /** The player whose turn it is. */
     private Player turn;
+    /** The player who has an outstanding message. */
     private Player messagePlayer;
 
+    /** A list of known winners. */
     private final List<Player> winners = new ArrayList<Player>();
-    private final Map<Player, Integer> percentages = new HashMap<Player, Integer>();
+    /** A position where the next card should be dealt to for each player. */
     private final Map<Player, Point> nextCardPos = new HashMap<Player, Point>();
 
+    /** The current player message. */
     private String message;
 
+    /** The human player who we're waiting for to chose his move. */
     private HumanPlayer player = null;
+    /** The human player who we're waiting for to continue. */
     private HumanPlayer waitPlayer = null;
+    /** The human player who we're waiting for to discard. */
     private HumanPlayer discardPlayer = null;
 
+    /** The minimum number of cards that need discarding. */
     private int discardMin = -1;
+    /** The maximum number of cards that need discarding. */
     private int discardMax = -1;
+    /** The cards that have been chosen to discard. */
     private Deck discards = null;
 
+    /** Whether the current player can fold. */
     private boolean canFold = false;
+    /** Whether the current player can raise. */
     private boolean canRaise = true;
+    /** Whether or not we're in showdown. */
     private boolean inShowdown = false;
 
+    /** The image buffer we render to. */
     private BufferedImage buffer = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
 
+    /** A cache of card images. */
     private final Map<String, BufferedImage> cards = new HashMap<String, BufferedImage>();
+    /** A cache of card positions (for discarding). */
     private final Map<Rectangle, Card> cardPositions = new HashMap<Rectangle, Card>();
 
+    /** The buttons we're using. */
     private final Map<Button.TYPE, Button> buttons = new HashMap<Button.TYPE, Button>();
 
+    /** A semaphore used to control rendering access. */
     private final Semaphore drawSem = new Semaphore(1);
     
     /** The style of the card to use. */
@@ -335,6 +377,11 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener, K
         }
     }
 
+    /**
+     * Paints the visible community cards.
+     * 
+     * @param g The graphics object to render the buttons to.
+     */
     private void paintCommunityCards(final Graphics g) {
         int i = 0;
         int xOffset = getWidth() < communityMinSize ? cardShortOffset : cardLargeOffset;
@@ -345,6 +392,13 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener, K
         }
     }
 
+    /**
+     * Paints the dealer token at the specified position.
+     * 
+     * @param g The graphics object to render the token to.
+     * @param x The x co-ordinate of the token
+     * @param y The y co-ordinate of the token
+     */
     private void paintDealerToken(final Graphics g, final int x, final int y) {
         g.setColor(Color.ORANGE);
         g.fillOval(x, y, 25, 25);
@@ -352,6 +406,13 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener, K
         g.drawString("D", x + 9, y + 17);
     }
 
+    /**
+     * Paints the winner token at the specified position.
+     * 
+     * @param g The graphics object to render the token to.
+     * @param x The x co-ordinate of the token
+     * @param y The y co-ordinate of the token
+     */
     private void paintWinnerToken(final Graphics g, final int x, final int y) {
         g.setColor(Color.GREEN);
         g.fillOval(x + 37, y - 3, 20, 20);
@@ -359,11 +420,25 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener, K
         g.drawString("W", x + 42, y + 12);
     }
 
+    /**
+     * Paints the turn token at the specified position.
+     * 
+     * @param g The graphics object to render the token to.
+     * @param x The x co-ordinate of the token
+     * @param y The y co-ordinate of the token
+     */
     private void paintTurnToken(final Graphics g, final int x, final int y) {
         g.setColor(Color.WHITE);
         g.fillOval(x - 12, y - 10, 10, 10);
     }
 
+    /**
+     * Paints the current message at the specified position.
+     * 
+     * @param g The graphics object to render the message to.
+     * @param x The x co-ordinate of the message
+     * @param y The y co-ordinate of the message
+     */
     private void paintMessage(final Graphics g, final int x, final int y) {
         g.setColor(Color.YELLOW);
         g.drawString(message, x, y);
@@ -592,6 +667,14 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener, K
         repaint();
     }
 
+    /**
+     * Indicates that a human player controller is waiting for the player to
+     * discard some cards.
+     * 
+     * @param player The player who has to do the discarding
+     * @param min The minimum number of cards to discard
+     * @param max The maximum number of cards to discard
+     */
     public void setDiscardPlayer(final HumanPlayer player, final int min, final int max) {
         this.discardPlayer = player;
         discardMin = min;
@@ -633,6 +716,11 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener, K
         }
     }
 
+    /**
+     * Handles the user clicking on a button.
+     * 
+     * @param type The type of button that was clicked on
+     */
     private void processMouseClick(final Button.TYPE type) {
         boolean done = false;
 
@@ -711,28 +799,38 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener, K
         repaint();
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void mousePressed(MouseEvent e) {
         // Do nothing
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void mouseReleased(MouseEvent e) {
         // Do nothing
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void mouseEntered(MouseEvent e) {
         // Do nothing
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void mouseExited(MouseEvent e) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void keyTyped(KeyEvent e) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void keyPressed(KeyEvent e) {
         if (player != null) {
             boolean done = false;
@@ -823,7 +921,12 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener, K
         }
     }
 
-    private void toggleDiscard(int card) {
+    /**
+     * Toggles the "discard" state of the specified card.
+     * 
+     * @param card The index of the card to be toggled
+     */
+    private void toggleDiscard(final int card) {
         final Deck playerCards = discardPlayer.getPlayer().getCards();
 
         if (playerCards.size() >= card) {
@@ -842,10 +945,13 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener, K
     }
 
     /** {@inheritDoc} */
+    @Override
     public void keyReleased(KeyEvent e) {
         // Do nothing
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void discards(Player player, int number) {
         messagePlayer = player;
         message = "Discards " + number + " card" + (number == 1 ? "" : "s");
@@ -853,6 +959,9 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener, K
         doUpdate();
     }
 
+    /**
+     * Flips all cards over.
+     */
     private void flipAllCards() {
         final List<Card> unflipped = new ArrayList<Card>();
 
@@ -870,6 +979,12 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener, K
         flipCard(false, unflipped.toArray(new Card[0]));
     }
 
+    /**
+     * Flips the specified cards over.
+     * 
+     * @param startsVisible Whether or not the card starts visible
+     * @param cards The cards to be flipped
+     */
     private void flipCard(final boolean startsVisible, final Card ... cards) {
         drawSem.acquireUninterruptibly();
         boolean visible = startsVisible;
@@ -923,6 +1038,8 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener, K
         drawSem.release();
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void cardDealt(final Player player, final Card card) {
         drawSem.acquireUninterruptibly();
 
