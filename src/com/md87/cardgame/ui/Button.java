@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Chris 'MD87' Smith, 2007. All rights reserved.
+ * Copyright (c) Chris 'MD87' Smith, 2007-2008. All rights reserved.
  *
  * This code may not be redistributed without prior permission from the
  * aforementioned copyright holder(s).
@@ -21,8 +21,8 @@ import java.awt.geom.Rectangle2D;
  */
 public class Button {
     
-    private final static Color BUTTON_ACTIVE = new Color(0, 200, 0);
-    private final static Color BUTTON_INACTIVE = new Color(0, 150, 0);    
+    private final Color activeColour;
+    private final Color inactiveColour;
     
     public static enum TYPE {
         SLOW {
@@ -97,9 +97,11 @@ public class Button {
     private String text;
     private Rectangle bounds;
     
-    public Button(final String text, final Rectangle bounds) {
+    public Button(final String text, final Rectangle bounds, final Color base) {
         this.text = text;
         this.bounds = bounds;
+        this.inactiveColour = base.brighter();
+        this.activeColour = this.inactiveColour.brighter();
     }
     
     public String getText() {
@@ -115,7 +117,7 @@ public class Button {
     }
     
     public void render(final Graphics2D g, final boolean enabled) {
-        g.setColor(enabled ? BUTTON_ACTIVE : BUTTON_INACTIVE);
+        g.setColor(enabled ? activeColour : inactiveColour);
         g.drawRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 5, 5);
 
         renderTextCentered(g);

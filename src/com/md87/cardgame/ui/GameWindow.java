@@ -209,29 +209,29 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener, K
 
         buttons.put(Button.TYPE.FAST, new Button("Fast",
                 new Rectangle(BUTTON_OFFSET, topButton + 0 * buttonOffset, BUTTON_WIDTH,
-                BUTTON_HEIGHT)));
+                BUTTON_HEIGHT), backgroundColour));
         buttons.put(Button.TYPE.NORMAL, new Button("Medium",
                 new Rectangle(BUTTON_OFFSET, topButton + 1 * buttonOffset, BUTTON_WIDTH,
-                BUTTON_HEIGHT)));
+                BUTTON_HEIGHT), backgroundColour));
         buttons.put(Button.TYPE.SLOW, new Button("Slow",
                 new Rectangle(BUTTON_OFFSET, topButton + 2 * buttonOffset, BUTTON_WIDTH,
-                BUTTON_HEIGHT)));
+                BUTTON_HEIGHT), backgroundColour));
         buttons.put(Button.TYPE.CONTINUE, new Button("Continue",
                 new Rectangle(BUTTON_OFFSET, topButton + 3 * buttonOffset, BUTTON_WIDTH,
-                BUTTON_HEIGHT)));
+                BUTTON_HEIGHT), backgroundColour));
 
         buttons.put(Button.TYPE.CHECK, new Button("Check / Call",
                 new Rectangle(rightButton, topButton + 0 * buttonOffset, BUTTON_WIDTH,
-                BUTTON_HEIGHT)));
+                BUTTON_HEIGHT), backgroundColour));
         buttons.put(Button.TYPE.OPEN, new Button("Open / Raise",
                 new Rectangle(rightButton, topButton + 1 * buttonOffset, BUTTON_WIDTH,
-                BUTTON_HEIGHT)));
+                BUTTON_HEIGHT), backgroundColour));
         buttons.put(Button.TYPE.FOLD, new Button("Fold",
                 new Rectangle(rightButton, topButton + 2 * buttonOffset, BUTTON_WIDTH,
-                BUTTON_HEIGHT)));
+                BUTTON_HEIGHT), backgroundColour));
         buttons.put(Button.TYPE.DISCARD, new Button("Discard",
                 new Rectangle(rightButton, topButton + 3 * buttonOffset, BUTTON_WIDTH,
-                BUTTON_HEIGHT)));
+                BUTTON_HEIGHT), backgroundColour));
     }
 
     /**
@@ -339,7 +339,7 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener, K
                 nextCardPos.put(myPlayer, new Point(x + xOffset, yCardPosition));
 
                 if (inShowdown && !myPlayer.hasFolded() && myPlayer.getCards().size() > 0) {
-                    g.setColor(Color.GREEN);
+                    g.setColor(backgroundColour.brighter().brighter());
                     String[] hand = game.getHandText(myPlayer).split("\n");
                     int yo = 0;
                     for (String line : hand) {
