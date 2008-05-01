@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Chris 'MD87' Smith, 2007. All rights reserved.
+ * Copyright (c) Chris 'MD87' Smith, 2007-2008. All rights reserved.
  *
  * This code may not be redistributed without prior permission from the
  * aforementioned copyright holder(s).
@@ -39,6 +39,7 @@ public class ConfigScreen extends JDialog {
     private final PlayerPanel playerPanel = new PlayerPanel();
     private final GamePanel gamePanel = new GamePanel(this);
     private final BettingPanel bettingPanel = new BettingPanel();
+    private final AppearancePanel stylePanel = new AppearancePanel();
     private final JPanel savePanel = new JPanel();
     
     private GameInfo game;
@@ -50,12 +51,14 @@ public class ConfigScreen extends JDialog {
         Image playerIcon = null;
         Image moneyIcon = null;
         Image saveIcon = null;
+        Image styleIcon = null;
         
         try {
-            gameIcon = ImageIO.read(getClass().getResource("/com/md87/cardgame/res/icon.png"));
-            playerIcon = ImageIO.read(getClass().getResource("/com/md87/cardgame/res/user.png"));
-            moneyIcon = ImageIO.read(getClass().getResource("/com/md87/cardgame/res/money.png"));
-            saveIcon = ImageIO.read(getClass().getResource("/com/md87/cardgame/res/save.png"));
+            gameIcon = ImageIO.read(getClass().getResource("/com/md87/cardgame/res/icons/icon.png"));
+            playerIcon = ImageIO.read(getClass().getResource("/com/md87/cardgame/res/icons/user.png"));
+            moneyIcon = ImageIO.read(getClass().getResource("/com/md87/cardgame/res/icons/money.png"));
+            saveIcon = ImageIO.read(getClass().getResource("/com/md87/cardgame/res/icons/save.png"));
+            styleIcon = ImageIO.read(getClass().getResource("/com/md87/cardgame/res/icons/style.png"));
         } catch (IOException ex) {
             System.err.println("Unable to load icons");
         }   
@@ -64,11 +67,12 @@ public class ConfigScreen extends JDialog {
         
         setTitle("JaPoker: Game configuration");
         
-        tabbedPane.addTab("Game type", new ImageIcon(gameIcon), gamePanel);
+        tabbedPane.addTab("Game", new ImageIcon(gameIcon), gamePanel);
         tabbedPane.addTab("Players", new ImageIcon(playerIcon), playerPanel);
         tabbedPane.addTab("Betting", new ImageIcon(moneyIcon), bettingPanel);
+        tabbedPane.addTab("Appearance", new ImageIcon(styleIcon), stylePanel);
         tabbedPane.addTab("Save/Load", new ImageIcon(saveIcon), savePanel);
-        
+        tabbedPane.setEnabledAt(4, false);
         tabbedPane.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         setLayout(new BorderLayout());
@@ -89,7 +93,7 @@ public class ConfigScreen extends JDialog {
         
         startButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 startGame();
             }
         });
@@ -115,7 +119,9 @@ public class ConfigScreen extends JDialog {
         final Game myGame = game.getGame(playerPanel.getNumPlayers(), 
                 bettingPanel.getBigBlind(), bettingPanel.getAnte(), 
                 bettingPanel.getRaises());
-        final GameWindow window = new GameWindow(myGame);
+        final GameWindow window = new GameWindow(myGame,
+                stylePanel.getFrontName(), stylePanel.getBackName(),
+                stylePanel.getColour());
         
         for (Player player : playerPanel.getPlayers(myGame, window)) {
             myGame.addPlayer(player);

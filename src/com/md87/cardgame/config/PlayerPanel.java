@@ -66,7 +66,7 @@ public class PlayerPanel extends JPanel {
             sp.setPreferredSize(new Dimension(100, 20));
             
             final JComboBox co = new JComboBox(ControllerInfo.getControllers());
-            co.setPreferredSize(new Dimension(160, 20));
+            co.setPreferredSize(new Dimension(200, 20));
             
             if (i > 0) {
                 co.setSelectedIndex(3);

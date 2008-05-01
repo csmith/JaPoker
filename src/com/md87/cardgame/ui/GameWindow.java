@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Chris 'MD87' Smith, 2007. All rights reserved.
+ * Copyright (c) Chris 'MD87' Smith, 2007-2008. All rights reserved.
  *
  * This code may not be redistributed without prior permission from the
  * aforementioned copyright holder(s).
@@ -38,8 +38,7 @@ import javax.swing.JFrame;
  *
  * @author Chris
  */
-public class GameWindow extends JFrame implements GameObserver, MouseListener,
-        KeyListener {
+public class GameWindow extends JFrame implements GameObserver, MouseListener, KeyListener {
 
     private static final long serialVersionUID = 1;
 
@@ -57,18 +56,17 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener,
     private final static int BUTTON_OFFSET = 25;
     private final static int BUTTON_SPACER = 10;
 
-    private final static int CARD_WIDTH = 71;
-    private final static int CARD_HEIGHT = 96;
+    private int cardWidth = 71;
+    private int cardHeight = 96;
     private final static int CARD_SPACER = 4;
 
-    private final static int COMMUNITY_OFFSET = 150;
-    private final static int CARD_LARGE_OFFSET = CARD_WIDTH + CARD_SPACER;
-    private final static int CARD_SHORT_OFFSET = 25;
+    private int communityOffset = 150;
+    private int cardLargeOffset = cardWidth + CARD_SPACER;
+    private int cardShortOffset = 25;
 
-    private final static int COMMUNITY_MINSIZE = 2 * COMMUNITY_OFFSET
-            + 6 * CARD_WIDTH + 5 * CARD_SPACER;
+    private int communityMinSize = 2 * communityOffset + 6 * cardWidth + 5 * CARD_SPACER;
 
-    private final static Color BACKGROUND = new Color(0, 100, 0);
+    private Color backgroundColour = new Color(0, 100, 0);
 
     private int speed = SPEED_NORMAL;
 
@@ -103,16 +101,39 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener,
     private final Map<Button.TYPE, Button> buttons = new HashMap<Button.TYPE, Button>();
 
     private final Semaphore drawSem = new Semaphore(1);
+    
+    /** The style of the card to use. */
+    private final String frontStyle, backStyle;
 
     /**
      * Creates a new game window for the specified game.
      *
      * @param game The game that this window should display
+     * @param frontStyle The folder name to use for the front of card images
+     * @param backStyle The file name to use for the back of card images
+     * @param backgroundColour The background colour to use
      */
-    public GameWindow(final Game game) {
+    public GameWindow(final Game game, final String frontStyle, 
+            final String backStyle, final Color backgroundColour) {
         super("JaPoker");
 
         this.game = game;
+        this.frontStyle = frontStyle;
+        this.backStyle = backStyle;
+        this.backgroundColour = backgroundColour;
+        
+        // Determine card size
+        try {
+            final String cardFile = "/com/md87/cardgame/res/fronts/" + frontStyle + "/sace.png";
+            final BufferedImage cardImage = ImageIO.read(getClass().getResource(cardFile));
+            
+            cardWidth = cardImage.getWidth();
+            cardHeight = cardImage.getHeight();
+            cardLargeOffset = cardWidth + CARD_SPACER;
+            communityMinSize = 2 * communityOffset + 6 * cardWidth + 5 * CARD_SPACER;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
         game.registerObserver(this);
 
@@ -126,7 +147,8 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener,
         setVisible(true);
 
         try {
-            setIconImage(ImageIO.read(getClass().getResource("/com/md87/cardgame/res/icon.png")));
+            setIconImage(ImageIO.read(getClass()
+                    .getResource("/com/md87/cardgame/res/icons/icon.png")));
         } catch (IOException ex) {
             System.err.println("Unable to load icon");
         }
@@ -188,20 +210,20 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener,
 
         Graphics g = buffer.getGraphics();
 
-        g.setColor(BACKGROUND);
+        g.setColor(backgroundColour);
         g.fillRect(0, 0, getWidth(), getHeight());
 
         paintButtons((Graphics2D) g);
         paintCommunityCards(g);
 
         int yCardPosition = 55;
-        int yNamePosition = 170;
+        int yNamePosition = 74 + cardHeight;
         int yHandPosition = 38;
         int x = 28;
 
         int xDirection = 1;
 
-        boolean largeOffset = (game.getPlayers().size() / 2) * (10 + CARD_LARGE_OFFSET
+        boolean largeOffset = (game.getPlayers().size() / 2) * (10 + cardLargeOffset
             * game.holeCardCount()) < getWidth() - 28 * 2;
 
         int playerNumber = 0;
@@ -210,14 +232,14 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener,
 
             // Flip the direction of players for the lower half of the screen
             if (playerNumber > game.getNumPlayers() / 2 && yCardPosition == 55) {
-                yCardPosition = getHeight() - 55 - CARD_HEIGHT;
-                yNamePosition = getHeight() - 155;
-                yHandPosition = getHeight() - 38;
+                yCardPosition = getHeight() - 45 - cardHeight;
+                yNamePosition = getHeight() - 56 - cardHeight;
+                yHandPosition = getHeight() - 30;
 
                 if (largeOffset) {
-                    x = getWidth() - 28 - CARD_LARGE_OFFSET * game.holeCardCount();
+                    x = getWidth() - 28 - cardLargeOffset * game.holeCardCount();
                 } else {
-                    x = getWidth() - 28 - CARD_LARGE_OFFSET - CARD_SHORT_OFFSET
+                    x = getWidth() - 28 - cardLargeOffset - cardShortOffset
                             * (game.holeCardCount() - 1);
                 }
 
@@ -253,7 +275,8 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener,
                     cardNumber++;
                     if ((myPlayer.shouldShowCards() || inShowdown
                             || card.isPublic() || !game.hasActiveHuman())
-                            && (discardPlayer == null || discardPlayer.getPlayer() != myPlayer
+                            && (discardPlayer == null
+                            || discardPlayer.getPlayer() != myPlayer
                             || !discards.contains(card))) {
                         showCard(g, card, x + xOffset, yCardPosition);
                     } else {
@@ -262,12 +285,12 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener,
 
                     cardPositions.put(new Rectangle(x + xOffset, yCardPosition,
                             ((largeOffset || cardNumber == myPlayer.getCards().size()) ?
-                                CARD_LARGE_OFFSET : CARD_SHORT_OFFSET), CARD_HEIGHT), card);
+                                cardLargeOffset : cardShortOffset), cardHeight), card);
 
                     if (largeOffset) {
-                        xOffset += CARD_LARGE_OFFSET;
+                        xOffset += cardLargeOffset;
                     } else {
-                        xOffset += CARD_SHORT_OFFSET;
+                        xOffset += cardShortOffset;
                     }
                 }
 
@@ -307,16 +330,17 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener,
 
         for (Map.Entry<Button.TYPE, Button> entry : buttons.entrySet()) {
             entry.getValue().render(g,
-                    entry.getKey().test(speed, waitPlayer, player, canRaise, canFold, discardPlayer));
+                    entry.getKey().test(speed, waitPlayer, player, canRaise,
+                    canFold, discardPlayer));
         }
     }
 
     private void paintCommunityCards(final Graphics g) {
         int i = 0;
-        int xOffset = getWidth() < COMMUNITY_MINSIZE ? CARD_SHORT_OFFSET : CARD_LARGE_OFFSET;
+        int xOffset = getWidth() < communityMinSize ? cardShortOffset : cardLargeOffset;
 
         for (Card card : game.getCommunityCards()) {
-            showCard(g, card, COMMUNITY_OFFSET + i * xOffset, (getHeight() - CARD_HEIGHT)/2);
+            showCard(g, card, communityOffset + i * xOffset, (getHeight() - cardHeight)/2);
             i++;
         }
     }
@@ -354,7 +378,7 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener,
      * @param y The y-coordinate of the card
      */
     private void showCard(final Graphics g, final Card card, final int x, final int y) {
-        showCard(g, card, x, y, CARD_WIDTH);
+        showCard(g, card, x, y, cardWidth);
     }
 
     /**
@@ -366,18 +390,24 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener,
      * @param y The y-coordinate of the card
      * @param width The width that the card should be scaled to
      */
-    private void showCard(final Graphics g, final Card card, final int x, final int y, final int width) {
+    private void showCard(final Graphics g, final Card card, final int x, final int y,
+            final int width) {
         try {
             final String file = "/com/md87/cardgame/res/"
-                    + (card == null ? "back1" : card.getFileName()) + ".png";
+                    + (card == null ? "backs/" + backStyle : "fronts/" + frontStyle + "/"
+                    + card.getFileName()) + ".png";
             if (!cards.containsKey(file)) {
                 BufferedImage im = ImageIO.read(getClass().getResource(file));
                 cards.put(file, im);
             }
+            
+            if (cards.get(file) == null) {
+                System.err.println("No card image for: " + file);
+            }
 
-            ((Graphics2D) g).drawImage(cards.get(file), x + (CARD_WIDTH - width)/2, y,
-                    x + width + (CARD_WIDTH - width)/2, y + CARD_HEIGHT,
-                    0, 0, CARD_WIDTH, CARD_HEIGHT, this);
+            ((Graphics2D) g).drawImage(cards.get(file), x + (cardWidth - width)/2, y,
+                    x + width + (cardWidth - width)/2, y + cardHeight,
+                    0, 0, cards.get(file).getWidth(), cards.get(file).getHeight(), this);
         } catch (IOException ex) {
             System.err.print("Error loading image: " + ex);
         }
@@ -827,7 +857,8 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener,
         final List<Card> unflipped = new ArrayList<Card>();
 
         for (Player curPlayer : game.getPlayers()) {
-            if (!curPlayer.isOut() && !curPlayer.hasFolded() && !curPlayer.shouldShowCards()) {
+            if (!curPlayer.isOut() && !curPlayer.hasFolded()
+                    && !curPlayer.shouldShowCards()) {
                 for (Card card : curPlayer.getCards()) {
                     if (!card.isPublic()) {
                         unflipped.add(card);
@@ -873,10 +904,11 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener,
 
                 int size = 50 - (progress > 50 ? 100 - progress : progress);
 
-                g.setColor(BACKGROUND);
+                g.setColor(backgroundColour);
                 g.fillRect(rect.x, rect.y, rect.width, rect.height);
 
-                showCard(g, visible ? card : null, x, y, (int) (CARD_WIDTH * ((float) size/50)));
+                showCard(g, visible ? card : null, x, y, (int) (cardWidth 
+                        * ((float) size/50)));
                 }
 
             getGraphics().drawImage(newbuffer, 0, 0, this);
@@ -897,17 +929,18 @@ public class GameWindow extends JFrame implements GameObserver, MouseListener,
         final int targetX = nextCardPos.get(player).x;
         final int targetY = nextCardPos.get(player).y;
 
-        cardPositions.put(new Rectangle(targetX, targetY, CARD_WIDTH, CARD_HEIGHT), card);
+        cardPositions.put(new Rectangle(targetX, targetY, cardWidth, cardHeight), card);
 
         final BufferedImage newbuffer = new BufferedImage(getWidth(), getHeight(),
                 BufferedImage.TYPE_INT_ARGB);
-        for (int x = 0; x < targetX + CARD_WIDTH; x += Math.max(15, targetX / 15)) {
-            int y = ((HEIGHT - CARD_HEIGHT) / 2)
-                    - Math.round(((float) x / (float) (targetX + CARD_WIDTH))
-                    * ((HEIGHT - CARD_HEIGHT) / 2 - targetY));
+        for (int x = 0; x < targetX + cardWidth; x += Math.max(15, targetX / 15)) {
+            int y = ((HEIGHT - cardHeight) / 2)
+                    - Math.round(((float) x / (float) (targetX + cardWidth))
+                    * ((HEIGHT - cardHeight) / 2 - targetY));
             newbuffer.getGraphics().drawImage(buffer, 0, 0, this);
 
-            showCard(newbuffer.getGraphics(), card.isPublic() ? card : null, x - CARD_WIDTH, y);
+            showCard(newbuffer.getGraphics(), card.isPublic() ? card : null,
+                    x - cardWidth, y);
 
             getGraphics().drawImage(newbuffer, 0, 0, this);
 
