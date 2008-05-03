@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Chris 'MD87' Smith, 2007. All rights reserved.
+ * Copyright (c) Chris 'MD87' Smith, 2007-2008. All rights reserved.
  *
  * This code may not be redistributed without prior permission from the
  * aforementioned copyright holder(s).
@@ -34,8 +34,11 @@ public abstract class AbstractGame implements Game, Runnable {
     /** The maximum number of players this game will contain. */
     protected int numplayers = 0;
     
+    /** Size of the big blind. */
     protected int bigblind = 0;
+    /** Size of the ante. */
     protected int ante = 0;
+    /** Maximum number of raises. */
     protected int raises = 4;
     
     protected int raisesLeft;
@@ -71,9 +74,9 @@ public abstract class AbstractGame implements Game, Runnable {
             return;
         }
         
-        final Player player = new Player(this, name, cash, controller);
+        final Player myPlayer = new Player(this, name, cash, controller);
         
-        addPlayer(player);
+        addPlayer(myPlayer);
     }
     
     /** {@inheritDoc} */
@@ -101,8 +104,8 @@ public abstract class AbstractGame implements Game, Runnable {
     public int getCurrentPot() {
         int pot = 0;
         
-        for (Player player : players) {
-            pot += player.getBet();
+        for (Player myPlayer : players) {
+            pot += myPlayer.getBet();
         }
         
         return pot;
@@ -323,7 +326,8 @@ public abstract class AbstractGame implements Game, Runnable {
                         break;
                     }
                 } else {
-                    final boolean canRaise = raisesLeft != 0;
+                    final boolean canRaise = raisesLeft != 0
+                            && countPlayers(true, true, true) > 1;
                     
                     // He can call, raise or fold
                     switch (myPlayer.doCallRaiseFold(maxbet - myPlayer.getBet(), canRaise)) {
