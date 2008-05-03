@@ -124,6 +124,36 @@ public class AppearancePanel extends JPanel implements ActionListener, ChangeLis
         return new Color((Integer) redSpinner.getValue(),
                 (Integer) greenSpinner.getValue(), (Integer) blueSpinner.getValue());
     }
+    
+    /**
+     * Retrieves the current state of this appearance panel as an array of objects.
+     * 
+     * @return This panel's current state
+     */
+    public Object[] getData() {
+        return new Object[]{
+            frontCombo.getSelectedIndex(),
+            backCombo.getSelectedIndex(),
+            redSpinner.getValue(),
+            greenSpinner.getValue(),
+            blueSpinner.getValue()
+        };
+    }
+    
+    /**
+     * Sets the state of this appearance panel to a previously saved state.
+     * 
+     * @param data The new state of the panel
+     */
+    public void setData(final Object[] data) {
+        frontCombo.setSelectedIndex((Integer) data[0]);
+        backCombo.setSelectedIndex((Integer) data[1]);
+        redSpinner.setValue(data[2]);
+        greenSpinner.setValue(data[3]);
+        blueSpinner.setValue(data[4]);
+        
+        preview.repaint();
+    }
 
     private class PreviewPanel extends JPanel {
 
@@ -131,6 +161,7 @@ public class AppearancePanel extends JPanel implements ActionListener, ChangeLis
             super(new MigLayout("fill"));
         }
 
+        /** {@inheritDoc} */
         @Override
         public void paint(final Graphics g) {
             g.setColor(AppearancePanel.this.getColour());

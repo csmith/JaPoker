@@ -123,5 +123,25 @@ public class BettingPanel extends JPanel implements ActionListener {
             }
         }
     }
+    
+    /**
+     * Retrieves an array of data representing the state of this betting panel.
+     * 
+     * @return The current state of this betting panel
+     */
+    public Object[] getData() {
+        return new Object[]{getAnte(), getBigBlind(), getRaises()};
+    }
+    
+    /**
+     * Sets the current state of this betting panel.
+     * 
+     * @param data The new state of the betting panel
+     */
+    public void setData(final Object[] data) {
+        ante.setValue(data[0]);
+        bigblind.setValue(data[1]);
+        raises.setValue(data[2]);
+    }
 
 }

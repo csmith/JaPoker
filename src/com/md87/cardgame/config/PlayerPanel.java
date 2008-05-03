@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Chris 'MD87' Smith, 2007. All rights reserved.
+ * Copyright (c) Chris 'MD87' Smith, 2007-2008. All rights reserved.
  *
  * This code may not be redistributed without prior permission from the
  * aforementioned copyright holder(s).
@@ -32,6 +32,14 @@ import javax.swing.SpinnerNumberModel;
  */
 public class PlayerPanel extends JPanel {
     
+    /**
+     * A version number for this class. It should be changed whenever the class
+     * structure is changed (or anything else that would prevent serialized
+     * objects being unserialized with the new class).
+     */
+    private static final long serialVersionUID = 1;
+    
+    /** The maximum maximum number of players. */
     private static final int MAXPLAYERS = 14;
     
     private final JPanel innerPanel = new JPanel();
@@ -122,6 +130,48 @@ public class PlayerPanel extends JPanel {
         return res;
     }
     
+    /**
+     * Retrieves a list of data representing the state of this panel.
+     * 
+     * @return The state of this panel
+     */
+    public List<Object[]> getData() {
+        final List<Object[]> res = new ArrayList<Object[]>();
+        
+        for (int i = 0; i < MAXPLAYERS; i++) {
+            res.add(new Object[]{
+                checkBoxes.get(i).isSelected(),
+                textFields.get(i).getText(),
+                spinners.get(i).getValue(),
+                comboBoxes.get(i).getSelectedIndex(),
+            });
+        }
+        
+        return res;
+    }
+    
+    /**
+     * Sets the state of this panel to that described in the specified data list.
+     * 
+     * @param data The data to be loaded
+     */
+    public void setData(final List<Object[]> data) {
+        for (int i = 0; i < MAXPLAYERS; i++) {
+            final Object[] ldata = data.get(i);
+            checkBoxes.get(i).setSelected((Boolean) ldata[0]);
+            textFields.get(i).setText((String) ldata[1]);
+            spinners.get(i).setValue(ldata[2]);
+            comboBoxes.get(i).setSelectedIndex((Integer) ldata[3]);
+        }
+    }
+    
+    /**
+     * Retrieves a list of players that should be added to the game.
+     * 
+     * @param game The game that players will take part in
+     * @param window The game window shown locally
+     * @return A list of players to play in the game
+     */
     public List<Player> getPlayers(final Game game, final GameWindow window) {
         final List<Player> res = new ArrayList<Player>();
         

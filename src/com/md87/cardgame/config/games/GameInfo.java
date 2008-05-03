@@ -9,11 +9,20 @@ package com.md87.cardgame.config.games;
 
 import com.md87.cardgame.interfaces.Game;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Chris
  */
-public abstract class GameInfo {
+public abstract class GameInfo implements Serializable {
+    
+    /**
+     * A version number for this class. It should be changed whenever the class
+     * structure is changed (or anything else that would prevent serialized
+     * objects being unserialized with the new class).
+     */
+    private static final long serialVersionUID = 1;
     
     public static enum GameType  {
         STUD, DRAW, HOLDEM
@@ -47,6 +56,18 @@ public abstract class GameInfo {
             new SevenCardStudInfo(),
             new AsianFiveCardStudInfo(),
         };
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean equals(final Object obj) {
+        return getClass().equals(obj.getClass());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
     
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Chris 'MD87' Smith, 2007. All rights reserved.
+ * Copyright (c) Chris 'MD87' Smith, 2007-2008. All rights reserved.
  *
  * This code may not be redistributed without prior permission from the
  * aforementioned copyright holder(s).
@@ -11,7 +11,6 @@ import com.md87.cardgame.config.games.GameInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map;
 
 import javax.swing.JPanel;
@@ -26,6 +25,11 @@ import net.miginfocom.swing.MigLayout;
  */
 public class GamePanel extends JPanel implements ActionListener {
     
+    /**
+     * A version number for this class. It should be changed whenever the class
+     * structure is changed (or anything else that would prevent serialized
+     * objects being unserialized with the new class).
+     */
     private static final long serialVersionUID = 1;
 
     private final Map<GameInfo, JRadioButton> games = new HashMap<GameInfo, JRadioButton>();
@@ -75,6 +79,15 @@ public class GamePanel extends JPanel implements ActionListener {
                 entry.getValue().setSelected(false);
             }
         }
+    }
+    
+    /**
+     * Sets the game that's currently selected.
+     * 
+     * @param target The game to select.
+     */
+    public void setGame(final GameInfo target) {
+        actionPerformed(new ActionEvent(games.get(target), 0, ""));
     }
     
 }
