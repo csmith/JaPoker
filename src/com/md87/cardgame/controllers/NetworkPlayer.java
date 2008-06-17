@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Chris 'MD87' Smith, 2007. All rights reserved.
+ * Copyright (c) Chris 'MD87' Smith, 2007-2008. All rights reserved.
  *
  * This code may not be redistributed without prior permission from the
  * aforementioned copyright holder(s).
@@ -31,128 +31,153 @@ public class NetworkPlayer implements PlayerController, GameObserver {
     }
 
     /** {@inheritDoc} */
+    @Override
     public CallRaiseFold doCallRaiseFold(int callAmount, boolean canRaise) {
         return CallRaiseFold.CALL;
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public OpenCheck doOpenCheck() {
         return OpenCheck.CHECK;
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public boolean shouldShowCards() {
         return false;
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void setPlayer(Player player) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void setGame(Game game) {
         game.registerObserver(this);
     }
 
     /** {@inheritDoc} */
+    @Override
     public int getRaise(int minimum) {
         return minimum;
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void communityCardsUpdated() {
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void playerCardsUpdated() {
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void playersTurn(Player player) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void newPlayer(Player player) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void newGame() {
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void endGame() {
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void setDealer(Player player) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void placeBlind(Player player, int blind, String name) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void raise(Player player, int amount) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void fold(Player player) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void call(Player player) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void check(Player player) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void open(Player player, int amount) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void winner(Player players) {
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public void showdown() {
         // Do nothing
     }
 
     /** {@inheritDoc} */
+    @Override
     public boolean isLocalHuman() {
         return false;
     }
     
     /** {@inheritDoc} */
+    @Override
     public Deck discardCards(final int minimum, final int maximum) {
         return new Deck();
     }
 
+    @Override
     public void discards(Player player, int number) {
         // Do nothing
     }
 
+    @Override
     public void cardDealt(Player player, Card card) {
         // Do nothing
     }
