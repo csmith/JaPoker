@@ -106,6 +106,32 @@ public class StandardHandTest {
         h.getDeck().removeAll(b);
         assertTrue("deck is correct", h.getDeck().isEmpty());
     }
+
+    @Test
+    public void checkFlushes2() {
+        Deck a = new Deck();
+        a.add(new Card(Suit.SPADES, Rank.SIX));
+        a.add(new Card(Suit.SPADES, Rank.THREE));
+        a.add(new Card(Suit.SPADES, Rank.FOUR));
+        a.add(new Card(Suit.SPADES, Rank.JACK));
+        a.add(new Card(Suit.HEARTS, Rank.QUEEN));
+        a.add(new Card(Suit.SPADES, Rank.QUEEN));
+        a.add(new Card(Suit.CLUBS, Rank.THREE));
+
+        Deck b = new Deck();
+        b.add(new Card(Suit.SPADES, Rank.KING));
+        b.add(new Card(Suit.SPADES, Rank.DEUCE));
+        b.add(new Card(Suit.SPADES, Rank.FOUR));
+        b.add(new Card(Suit.SPADES, Rank.JACK));
+        b.add(new Card(Suit.HEARTS, Rank.QUEEN));
+        b.add(new Card(Suit.SPADES, Rank.QUEEN));
+        b.add(new Card(Suit.CLUBS, Rank.THREE));
+
+        StandardHand ha = new StandardHand(a);
+        StandardHand hb = new StandardHand(b);
+
+        assertTrue("ha > hb", ha.compareTo(hb) > 0);
+    }
     
     @Test
     public void checkNoPair() {
