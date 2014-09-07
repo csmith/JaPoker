@@ -1,0 +1,333 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+ <head>
+  <title>JaPoker: A Java Poker implementation</title>
+  <style type="text/css">
+   body {
+    margin: 90px 30px;
+    .font-size: large;
+   } 
+
+   h1 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    background-color: #ccc;
+    margin: 0px;
+    padding: 10px 0px;
+    border-bottom: 1px solid black;
+   }
+   h1 img {
+    margin: 0px 5px 0px 10px;
+   }
+   .thumbs {
+    float: right;
+    width: 250px;
+    text-align: center;
+   }
+   .thumbs a {
+    text-decoration: none;
+   }
+   .thumbs a img {
+    border: 0px;
+   }
+   .main {
+    margin-right: 270px;
+   }
+   h2 {
+    border-bottom: 5px solid #ccc;
+   }
+   h3 {
+    border-bottom: 3px solid #ccc;
+   }
+   th {
+    text-align: left;
+    border-bottom: 2px solid #ccc;
+   }
+   td, th {
+    margin: 2px 10px;
+   }
+   table {
+    width: 100%;
+   }
+   tr.o td {
+    background-color: #ccc;
+   }
+  </style>
+
+  <link rel="stylesheet" href="css/lightbox.css" type="text/css">
+ </head>
+ <body>
+
+  <h1><img src="icon.png" alt="Card icon"> JaPoker</h1>
+  <div class="thumbs">
+   <a href="poker-13-appearance.png" rel="lightbox[screens]" title="JaPoker release 13, appearance settings">
+    <img src="thumbs/poker-13-appearance.png" alt="Screenshot thumbnail"><br>
+    Release 13 (config)<br>
+   </a>
+
+   <br><br>
+
+   <a href="japoker-omaha.png" rel="lightbox[screens]" title="JaPoker release 10">
+    <img src="thumbs/japoker-omaha.png" alt="Screenshot thumbnail"><br>
+    Release 10<br>
+   </a>
+
+   <br><br>
+
+   <a href="poker-6-game.png" rel="lightbox[screens]" title="JaPoker release 6">
+    <img src="thumbs/poker-6-game.png" alt="Screenshot thumbnail"><br>
+    Release 6<br>
+   </a>
+
+   <br><br>
+
+   <a href="poker-6-config.png" rel="lightbox[screens]" title="JaPoker release 6, config screen">
+    <img src="thumbs/poker-6-config.png" alt="Screenshot thumbnail"><br>
+    Release 6 (config)<br>
+   </a>
+
+   <br><br>
+
+   <a href="poker-5.png" rel="lightbox[screens]" title="JaPoker release 5">
+    <img src="thumbs/poker-5.png" alt="Screenshot thumbnail"><br>
+    Release 5<br>
+   </a>
+
+   <br><br>
+   <a href="poker.png" rel="lightbox[screens]" title="JaPoker release 2">
+
+    <img src="thumbs/poker.png" alt="Screenshot thumbnail"><br>
+    Release 2
+   </a>
+  </div>
+  <div class="main">
+  <p class="blurb">
+   JaPoker is a Java Poker game. It supports several poker variants (see table
+   below), and from 2 to 14 players (depending on the variant). Players can
+   at present either be local human players, or one of three primitive
+   computer-controlled players. 
+  </p>
+  <p>
+   JaPoker requires Java version 1.6 or greater to run,
+   which can be obtained from
+   <a href="http://www.java.com/">www.java.com</a>.
+  </p>
+
+  <h2>Download</h2>
+  <p>
+   Release 12 may be downloaded from <a href="https://github.com/csmith/JaPoker/releases/download/v12/CardGame.jar">GitHub</a>.
+  </p>
+  <h2>Games</h2>
+  <table>
+   <tr><th>Game</th><th>Release</th><th>Max players</th><th>Notes</th></tr>
+   <tr><td>Texas Hold'Em</td><td>1</td><td>14</td><td>The most
+    commonly played poker variant<br>&nbsp;</td></tr>
+   <tr class="o"><td>Royal Hold'Em</td><td>6</td><td>6</td><td>Texas Hold'Em variant.
+    <br>Cards below 10 are stripped from the deck</td></tr>
+   <tr><td>Five Card Stud</td><td>8</td><td>10</td><td>The earliest form of
+    stud poker<br>&nbsp;</td></tr>
+   <tr class="o"><td>Asian Five Card Stud</td><td>8</td><td>6</td><td>Five Card Stud variant.
+    <br>Cards below 7 are stripped from the deck</td></tr>
+   <tr><td>Seven Card Stud</td><td>8</td><td>8</td><td>Popular stud variant
+    <br>&nbsp;</td></tr> 
+   <tr class="o"><td>Omaha Hold'Em</td><td>10</td><td>10</td><td>Popular Hold'Em variant.
+    <br>Players have 4 hole cards and must use exactly 2.</td></tr>
+   <tr><td>Omaha High/Low</td><td>10</td><td>10</td><td>Omaha Hold'Em variant.
+    <br>Half the pot is given to the person with the lowest hand.</td></tr>
+   <tr class="o"><td>Courchevel</td><td>11</td><td>10</td><td>Omama Hold'Em variant.
+    <br>One community card is dealt before the first round of betting.</td></tr>
+   <tr><td>Super Hold'Em</td><td>11</td><td>14</td><td>Texas Hold'Em variant.
+    <br>Each player has three hole cards, instead of two.</td></tr>
+   <tr class="o"><td>Five-Card Draw</td><td>11</td><td>10</td><td>Popular draw game.
+    <br>Players may replace hole cards after the first round.</td></tr>
+   <tr><td>Pineapple</td><td>11</td><td>14</td><td>Texas Hold'Em variant.
+    <br>Players start with three hole cards and discard one.</td></tr>
+   <tr class="o"><td>Crazy Pineapple</td><td>11</td><td>14</td><td>Pineapple variant.
+    <br>Players wait until after the flop to discard their card.</td></tr>
+  </table>
+  <h2>Future enhancements</h2>
+  <ul>
+   <li>Network player support</li>
+   <li>Improved AI</li>
+   <li>Way to restart tournaments</li>
+   <li>Integrate raise dialog with main window</li>
+
+   <li>
+    More poker variants
+    <ul>
+     <li>Double-board Hold'Em (needs UI support for separate boards)</li>
+    </ul>
+   </li>
+   <li>Tutorial mode</li>
+
+   <li>Support for various limit types (no limit, pot limit, spread limit, fixed limit)</li>
+   <li>Support for bring-ins</li>
+   <li>Support for wild cards (needed for some variants)</li>
+   <li>Achievements</li>
+   <li>Better support for multiple local human players (card hiding, etc)</li>
+   <li>Documentation for each poker variant</li>
+
+  </ul>
+
+  <h2>Changelog</h2>
+
+  <h3>Release 12 to Release 13</h3>
+  <ul>
+   <li>Added animations for card dealing</li>
+   <li>Added animations for card flipping</li>
+   <li>Fixed incorrect amount being displayed when taking the big blind</li>
+   <li>Card style and background colour can now be changed</li>
+   <li>The last-used settings are now stored and used by default</li>
+   <li>You can no longer raise if all your opponents are all-in</li>
+  </ul>
+
+  <h3>Release 11 to Release 12</h3>
+  <ul>
+   <li>Fixed bug where images wouldn't load when running from a jar</li>
+  </ul>
+
+  <h3>Release 10 to Release 11</h3>
+  <ul>
+   <li>Fixed bug in Omaha High/Low games when all bar one player folded</li>
+   <li>Added Courchevel</li>
+   <li>Expanded betting config tab to include more (non-operational) options</li>
+   <li>Added keyboard shortcut for continue (space or enter)</li>
+   <li>Added Super Hold'Em</li>
+   <li>Added support for discarding cards</li>
+   <li>Added Five-Card Draw</li>
+   <li>Added Pineapple</li>
+   <li>Added Crazy Pineapple</li>
+   <li>Fixed bug with aces inappropriately being treated as low not high</li>
+   <li>Fix bug that allowed you to raise beyond your available cash due to way raises were processed</li>
+  </ul>
+
+  <h3>Release 9 to Release 10</h3>
+  <ul>
+   <li>Fixed issue where if all bar one players went all-in, the last player didn't have to call.</li>
+   <li>Added Omaha Hold'Em</li>
+   <li>Added Omaha High/Low</li>
+   <li>Added keyboard shortcuts for call/check (c), raise/open (r and o) and fold (f).</li>
+   <li>Added basic version of new config screen</li>
+   <li>Buttons are now slightly wider, and the text is properly centered rather than hard coded at a rough guess.</li>
+   <li>Fixed bug where hands containing a flush were compared with all their cards, rather than just the 5 (highest) cards in the flush.</li>
+   <li>All hole cards are now visible if there are no active, local, human players.</li>
+  </ul>
+
+  <h3>Release 8 to Release 9</h3>
+  <ul>
+   <li>Fixed null pointer exception</li>
+  </ul>
+
+  <h3>Release 7 to Release 8</h3>
+  <ul>
+   <li>Fixed cards being cleared after blinds (and thus blinds going missing).</li>
+   <li>Implemented five card stud</li>
+   <li>Implemented asian five card stud</li>
+   <li>Player hands are now positioned and collapsed better</li>
+   <li>Implemented seven card stud</li>
+   <li>Only 5 cards per hand are now compared (i.e., e.g., a royal flush in the community cards would be a tie between all players, regardless of their hole cards).</li>
+   <li>Full houses are now described as "X full of Y" not "Y among X".</li>
+  </ul>
+
+  <h3>Release 6 to Release 7</h3>
+  <ul>
+   <li>Fixed community and player cards not being reset after a game.</li>
+  </ul>
+
+  <h3>Release 5 to Release 6</h3>
+  <ul>
+   <li>Fixed issue where kickers were compared in the wrong order.</li>
+   <li>Fixed issue where single card decks were compared incorrectly (this resulted in various sorting anamolies).</li>
+   <li>Added icon to both config window and main game window.</li>
+   <li>Fixed flushes being compared incorrectly.</li>
+   <li>The end game AI is now basically functional.</li>
+   <li>Massive code refactoring to improve maintainability.</li>
+   <li>The 'two' rank has now been renamed to 'deuce'.</li>
+   <li>Implemented Royal Hold'Em variant.</li>
+   <li>Cards are now dealt from the left of the dealer, rather than from the first player.</li>
+  </ul>
+
+  <h3>Release 4 to Release 5</h3>
+  <ul>
+   <li>Centered the text on the speed buttons a little better.</li>
+   <li>The number of raises per round can now be capped.</li>
+   <li>Implemented 'heads up' rule for blinds when only two players are competing.</li>
+   <li>Blinds are now actually paid before the cards are dealt.</li>
+   <li>Cards are now dealt out properly (1 to each player, then a further 1 to each player), and there is now a short delay after each card so the deal is visible.</li>
+   <li>The game window is now fully resizable.</li>
+   <li>You now have to explicitly tell the game to continue after each game, rather than there being an arbitrary, long delay.</li>
+   <li>Players in the bottom row are now drawn right-to-left so play goes in a clockwise circle.</li>
+   <li>Increased maximum players to 14.</li>
+   <li>The small circle indicating the active player is no longer shown during showdown.</li>
+  </ul>
+
+  <h3>Release 3 to Release 4</h3>
+  <ul>
+   <li>Re-fixed bug when painting community cards that aren't there.</li>
+   <li>Raise dialog now gets positioned before becoming visible.</li>
+   <li>Straights now have their Ts back.</li>
+   <li>You can now open a round of bidding with a custom bet.</li>
+   <li>Added end game AI.</li>
+   <li>
+    The flop/turn/river is no longer superfluously revealed after all players
+    except one fold.
+   </li>
+  </ul>
+
+  <h3>Release 2 to Release 3</h3>
+  <ul>
+   <li>
+    Fixed issue where tournament ended when there were still multiple players,
+    but all bar one had folded in the previous round.
+   </li>
+   <li>
+    Fixed issue where game would halt (because of an exception) when performing
+    a showdown with a player who is out.
+   </li>
+   <li>
+    Fixed exception with window trying to draw community cards that aren't there
+   </li>
+   <li>
+    Implemented dead button rule (big blind is always played by the next player
+    in turn, and the small blind and dealer button move as needed).
+   </li>
+   <li>
+    Fixed issue with players who weren't in paying blinds.
+   </li>
+   <li>
+    Added speed options to the game window.
+   </li>
+   <li>
+    Removed popup dialog for input in favour of buttons in the game window.
+   </li>
+   <li>
+    The game window is no longer maximisable.
+   </li>
+   <li>
+    The player is now prompted to enter an amount to raise by if they have
+    more money than the minimum raise.
+   </li>
+
+  </ul>
+  <h3>Release 1 to Release 2</h3>
+  <ul>
+   <li>Fixed issue where play would loop indefinitely</li>
+   <li>The pot is now split correctly between winners</li>
+   <li>Players that go all in now show "all in" instead of a 0 balance</li>
+   <li>If there are more players than screen space cards are automatically stacked</li>
+
+   <li>Added support for Antes</li>
+   <li>Added new player controller - ConservativeOpener - that folds unless it has
+    a good pair of cards</li>
+   <li>Fixed issue with kickers being compared backwards</li>
+   <li>Added config screen</li>
+  </ul>
+  </div>
+
+<script type="text/javascript" src="js/prototype.js"></script>
+<script type="text/javascript" src="js/scriptaculous.js?load=effects,builder"></script>
+<script type="text/javascript" src="js/lightbox.js"></script>
+ </body>
+</html>

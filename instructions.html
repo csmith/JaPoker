@@ -1,0 +1,400 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+ <head>
+  <title>JaPoker: A Java Poker implementation</title>
+  <style type="text/css">
+   body {
+    margin: 90px 30px;
+    font-size: large;
+   } 
+   h1 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    background-color: #ccc;
+    margin: 0px;
+    padding: 10px 0px;
+    border-bottom: 1px solid black;
+   }
+   h1 img {
+    margin: 0px 5px 0px 10px;
+   }
+   h2 {
+    border-bottom: 5px solid #ccc;
+   }
+   h3 {
+    border-bottom: 3px solid #ccc;
+   }
+   h4 { border-bottom: 1px solid #ccc; clear: both; }
+   th {
+    text-align: left;
+    border-bottom: 2px solid #ccc;
+   }
+   td, th {
+    margin: 2px 10px;
+   }
+   table {
+    width: 100%;
+   }
+   tr.o td {
+    background-color: #ccc;
+   }
+   dt {
+    font-weight: bold;
+   }
+   dd {
+    margin-bottom: 15px;
+   }
+
+   .hand {
+    float: right;
+    width: 250px;
+    text-align: center;
+   }
+   .hand img {
+    width: 40px;
+    height: 54px;
+   }
+   .hand .desc {
+    margin-top: 0px;
+    padding-top: 0px;
+    font-size: small;
+   }
+   .handinfo {
+    margin-right: 260px;
+   }
+  </style>
+ </head>
+ <body>
+  <h1><img src="icon.png" alt="Card icon"> JaPoker</h1>
+  <div class="main">
+  <p class="blurb">
+   Welcome to JaPoker. JaPoker is a poker game developed by
+   <a href="http://chris.smith.name/">Chris Smith</a>. It can play
+   many common (and uncommon!) draw, stud and hold'em variants. It
+   also features a variety of computer controlled players to play
+   against. The latest information about JaPoker is available
+   on its <a href="http://poker.MD87.co.uk/">web page</a>.
+   The latest copy of these instructions can also be found
+   <a href="http://poker.MD87.co.uk/instructions.html">online</a>.
+  </p>
+  <h2>Contents</h2>
+  <ol>
+   <li><a href="#using">Using JaPoker</a>
+   <ol>
+    <li><a href="#using-config">The config screen</a></li>
+    <li><a href="#using-game">The game screen</a></li>
+   </ol>
+   </li>
+   <li><a href="#poker">Playing Poker</a>
+   <ol>
+    <li><a href="#poker-aim">The aim of the game</a></li>
+    <li><a href="#poker-hands">Hands</a></li>
+    <li><a href="#poker-turn">On your turn</a></li>
+    <li><a href="#poker-glossary">Poker Glossary</a></li>
+   </ol>
+   </li>
+   <li><a href="#games">The games</a>
+   <ol>
+    <li><a href="#games-texas">Texas Hold'Em</a></li>
+    <li><a href="#games-royal">Royal Hold'Em</a></li>
+    <li><a href="#games-5stud">Five Card Stud</a></li>
+    <li><a href="#games-5asian">Asian Five Card Stud</a></li>
+    <li><a href="#games-7stud">Seven Card Stud</a></li>
+    <li><a href="#games-omaha">Omaha Hold'Em</a></li>
+    <li><a href="#games-omhahahl">Omaha High/Low</a></li>
+    <li><a href="#games-courch">Courchevel</a></li>
+    <li><a href="#games-super">Super Hold'Em</a></li>
+    <li><a href="#games-5draw">Five Card Draw</a></li>
+    <li><a href="#games-pineapple">Pineapple</a></li>
+    <li><a href="#games-crazy">Crazy Pineapple</a></li>
+   </ol>
+   </li>
+  </ol>
+  <h2 id="using">Using JaPoker</h2>
+  <h3 id="using-config">The config screen</h3>
+  <h3 id="using-game">The game screen</h3>
+
+  <h2 id="poker">Playing Poker</h2>
+  <h3 id="poker-aim">The aim of the game</h3>
+  <h3 id="poker-hands">Hands</h3>
+  <p>
+   A poker <em>hand</em> is a set of five cards. There are nine standard categories
+   of hand, described below. Hands are compared first by category, then by individual
+   cards &mdash; the lowest possible straight flush will always beat the highest
+   possible four of a kind, for example.
+  </p>
+  
+  <h4>Straight Flush</h4>
+  <div class="hand">
+   <img src="res/dten.png" alt="Ten of diamonds">
+   <img src="res/djack.png" alt="Jack of diamonds">
+   <img src="res/dqueen.png" alt="Queen of diamonds">
+   <img src="res/dking.png" alt="King of diamonds">
+   <img src="res/dace.png" alt="Ace of diamonds">
+   <p class="desc">Royal Flush</p>
+   <p class="beats">... beats ... </p>
+   <img src="res/csix.png" alt="Six of clubs">
+   <img src="res/cseven.png" alt="Seven of clubs">
+   <img src="res/ceight.png" alt="Eight of clubs">
+   <img src="res/cnine.png" alt="Nine of clubs">
+   <img src="res/cten.png" alt="Ten of clubs">
+   <p class="desc">Ten-high straight flush</p>
+  </div>
+  <div class="handinfo">
+   <p>
+    A straight flush is a hand that has five sequential cards of the same suit.
+    The lowest possible straight flush is A-2-3-4-5, while the highest
+    (normally called a Royal Flush) is T-J-Q-K-A. Aces may be high or low, but
+    not both (Q-K-A-2-3 is <em>not</em> a valid straight). The suit of the
+    flush is irrelevant &mdash; T-J-Q-K-A of hearts is equal to T-J-Q-K-A of
+    clubs, spades or diamonds.
+   </p>
+   <p>
+    The hand is normally described by the highest card &mdash; a royal flush is
+    "ace-high", 5-6-7-8-9 would be "nine-high".
+   </p>
+  </div>
+  
+  <h4>Four of a kind</h4>
+  <div class="hand">
+   <img src="res/dace.png" alt="Ace of diamonds">
+   <img src="res/cace.png" alt="Ace of clubs">
+   <img src="res/hace.png" alt="Ace of hearts">
+   <img src="res/sace.png" alt="Ace of spades">
+   <img src="res/sdeuce.png" alt="Deuce of spades">
+   <p class="desc">Four aces</p>
+   <p class="beats">... beats ...</p>
+   <img src="res/dten.png" alt="Ten of diamonds">
+   <img src="res/cten.png" alt="Ten of clubs">
+   <img src="res/hten.png" alt="Ten of hearts">
+   <img src="res/sten.png" alt="Ten of spades">
+   <img src="res/hking.png" alt="King of hearts">
+   <p class="desc">Four tens</p>
+  </div><div class="handinfo">
+  <p>
+   A hand containing all four cards of one rank (such as 4-4-4-4-7 or
+   K-K-K-K-5) is classed as a 'four of a kind'. The 'spare' card is known as
+   the <a href="#gloss-kicker">kicker</a>, and isn't used when comparing
+   two hands with four of a kind. The higher the rank of the four cards,
+   the better the hand.
+  </p> 
+  </div>
+  
+  <h4>Full house</h4>
+  <div class="hand">
+   <img src="res/hfour.png" alt="Four of hearts">
+   <img src="res/dfour.png" alt="Four of diamonds">
+   <img src="res/cfour.png" alt="Four of clubs">
+   <img src="res/hdeuce.png" alt="Deuce of hearts">
+   <img src="res/cdeuce.png" alt="Deuce of clubs">
+   <p class="desc">Deuces among fours</p>
+   <p class="beats">... beats ... </p>
+   <img src="res/hthree.png" alt="Three of hearts">
+   <img src="res/cthree.png" alt="Three of clubs">
+   <img src="res/sthree.png" alt="Three of spades">
+   <img src="res/dace.png" alt="Ace of diamonds">
+   <img src="res/hace.png" alt="Ace of hearts">
+   <p class="desc">Aces among threes</p>
+  </div><div class="handinfo">
+  <p>
+   A full house is a hand that contains three cards of one rank, and two
+   of another, such as A-A-A-3-3. Full houses are compared by the set of
+   three cards (e.g., 3-3-3-4-4 beats 2-2-2-K-K), and are described by
+   both sets of cards &mdash; a hand of 3-3-3-4-4 would normally be
+   described as "fours among threes", or sometimes "threes over fours".
+  </p>
+  </div>
+  
+  <h4>Flush</h4>
+  <div class="hand">
+   <img src="res/ddeuce.png" alt="Deuce of diamonds">
+   <img src="res/dseven.png" alt="Seven of diamonds">
+   <img src="res/dnine.png" alt="Nine of diamonds">
+   <img src="res/dking.png" alt="King of diamonds">
+   <img src="res/dace.png" alt="Ace of diamonds">
+   <p class="desc">A-K-9-7-2 flush</p>
+   <p class="beats">... beats ... </p>
+   <img src="res/cking.png" alt="King of clubs">
+   <img src="res/cqueen.png" alt="Queen of clubs">
+   <img src="res/cjack.png" alt="Jack of clubs">
+   <img src="res/cnine.png" alt="Nine of clubs">
+   <img src="res/ceight.png" alt="Eight of clubs">
+   <p class="desc">K-Q-J-9-8 flush</p>
+  </div>
+  <div class="handinfo">
+  <p>
+   A flush is a hand of five cards that all belong to the same suit. Any
+   set of five cards of the same suit makes a flush (except for a set of
+   five sequential cards, which would make a <em>straight flush</em>).
+   Flushes are compared by each individual card, from high to low.
+  </p>
+  </div>
+  
+  <h4>Straight</h4>
+  <div class="hand">
+   <img src="res/dten.png" alt="Ten of diamonds">
+   <img src="res/sjack.png" alt="Jack of spades">
+   <img src="res/squeen.png" alt="Queen of spades">
+   <img src="res/hking.png" alt="King of hearts">
+   <img src="res/sace.png" alt="Ace of spades">
+   <p class="desc">Ace-high straight</p>
+   <p class="beats">... beats ... </p>
+   <img src="res/dsix.png" alt="Six of diamonds">
+   <img src="res/cseven.png" alt="Seven of clubs">
+   <img src="res/seight.png" alt="Eight of spades">
+   <img src="res/hnine.png" alt="Nine of hearts">
+   <img src="res/cten.png" alt="Ten of clubs">
+   <p class="desc">Ten-high straight</p>
+  </div><div class="handinfo">
+  <p>
+   A straight is a hand of five cards in sequential order, of any suit
+   (but not all of the same suit; that would be a straight flush).
+   Straights are described and compared by their highest card, for
+   example a hand of 4-5-6-7-8 would be described as "eight-high", and
+   would beat a "seven-high" straight.
+  </p>
+  </div>
+
+  <h4>Three of a kind</h4>
+  <div class="hand">
+   <img src="res/dten.png" alt="Ten of diamonds">
+   <img src="res/cten.png" alt="Ten of clubs">
+   <img src="res/sten.png" alt="Ten of spades">
+   <img src="res/hking.png" alt="King of hearts">
+   <img src="res/sace.png" alt="Ace of spades">
+   <p class="desc">Three tens</p>
+   <p class="beats">... beats ... </p>
+   <img src="res/dsix.png" alt="Six of diamonds">
+   <img src="res/csix.png" alt="Six of clubs">
+   <img src="res/ssix.png" alt="Six of spades">
+   <img src="res/hnine.png" alt="Nine of hearts">
+   <img src="res/cten.png" alt="Ten of clubs">
+   <p class="desc">Three sixes</p>
+  </div><div class="handinfo">
+  <p>
+   A hand containing three cards of one rank, and two other, different
+   cards (if they were the same, it would make a full house), such as A-A-A-3-4
+   is classed as a three of a kind. Three of a kinds are described and
+   compared by the set of three cards - A-A-A-3-4 is described as
+   "three aces", and beats any other three of a kind hand.
+  </p>
+  </div>
+
+  <h4>Two pair</h4>
+  <div class="hand">
+  </div><div class="handinfo">
+  <p>
+   A two-pair hand contains two (different) pairs of cards, and one kicker.
+   Two pair hands are compared by their highest pair, then their lowest pair,
+   then the kicker. For example, A-A-2-2-K beats Q-Q-J-J-T, which beats
+   Q-Q-T-T-J, which beats Q-Q-T-T-9.
+  </p>
+  </div>
+  
+  <h4>One pair</h4>
+  <div class="hand">
+  </div><div class="handinfo">
+  <p>
+   A hand conaining only one pair of cards are classed as "one pair", and
+   are compared first by their pair of cards, then by each of the three kickers
+   individually.
+  </p>
+  </div>
+
+  <h4>No pair</h4>
+  <div class="hand">
+  </div><div class="handinfo">
+  <p>
+   Any other set of five cards is classed as "no pair", and each card is
+   compared individually, from high to low.
+  </p>
+  </div>
+  <h3 id="poker-turn">On your turn</h3>
+  <h3 id="poker-glossary">Poker Glossary</h3>
+  <dl>
+   <dt id="gloss-flop">The Flop</dt>
+   <dd>The first three community cards dealt in a community card game. The flop is followed by the
+       <a href="#gloss-turn">turn</a> and <a href="#gloss-river">river</a>.</dd>
+   <dt id="gloss-hole">Hole Cards</dt>
+   <dd>A player's private cards</dd>
+   <dt id="gloss-kicker">Kicker</dt>
+   <dd>A card that is part of a five-card hand, but is not needed for the
+       category of the hand &mdash; e.g., the fifth card in a "four of a
+       kind" hand, or the three non-paired cards in a "one pair" hand</dd>
+   <dt id="gloss-river">The River</dt>
+   <dd>The fifth (and final) community card dealt in a community card game.
+       The river is preceeded by the <a href="#gloss-flop">flop</a> and
+       <a href="#gloss-turn">turn</a>.</dd>
+   <dt id="gloss-showdown">Showdown</dt>
+   <dd>The phase that takes place at the end of a hand, where players reveal
+       their <a href="#gloss-hole">hole cards</a> to determine who has the
+       best <a href="#poker-hands">hand</a>.</dd>
+   <dt id="gloss-stripped">Stripped Deck</dt>
+   <dd>A deck that has had certain cards removed (stripped) from it beforehand.
+       Stripped decks most commonly omit low-valued cards</dd>
+   <dt id="gloss-turn">The Turn</dt>
+   <dd>The fourth community card dealt in a community card game. The turn
+       is preceeded by the <a href="#gloss-flop">flop</a> and followed by
+       the <a href="#gloss-river">river</a>.</dd>
+  </dl>
+  <h2 id="games">The games</h2>
+  <h3 id="games-texas">Texas Hold'Em</h3>
+  <p>
+   Texas Hold'Em is the most popular poker variant played in casinos worldwide.
+   It is a <em>community card game</em>, which means that there are some cards
+   (the 'community cards') that are shared by all players. The aim of Texas
+   Hold'Em is to finish the game with the best <a href="#poker-hands">hand</a>.
+  </p>
+  <p>
+   In Texas Hold'Em, each player is dealt two <a href="#gloss-hole">hole cards</a>.
+   After an initial betting round, three community cards are revealed (called
+   <a href="#gloss-flop">the flop</a>). A further betting round then takes place,
+   and a fourth community card (<a href="#gloss-turn">the turn</a>) is dealt.
+   After another betting round, the final community card
+   (<a href="#gloss-turn">the river</a>) is dealt, and one final betting round
+   takes place.
+  </p>
+  <p>
+   After the final betting round is over, each player reveals their cards
+   (called the <a href="#gloss-showdown">showdown</a>). The player with the
+   best <a href="#poker-hands">poker hand</a> wins the content of the pot.
+  </p>
+  <h3 id="games-royal">Royal Hold'Em</h3>
+  <p>
+   Royal Hold'Em is a variant of <a href="#games-texas">Texas Hold'Em</a>.
+   It is played in an identical manner, but the deck is <a href="#gloss-stripped">stripped</a> of all cards
+   below tens (i.e., the deck only contains tens, jacks, queens, kings and aces).
+  </p>
+  <h3 id="games-5stud">Five Card Stud</h3>
+  <h3 id="games-7stud">Seven Card Stud</h3>
+  <h3 id="games-omaha">Omaha Hold'Em</h3>
+  <h3 id="games-omahahl">Omhaha High/Low</h3>
+  <h3 id="games-courch">Courchevel</h3>
+  <h3 id="games-super">Super Hold'Em</h3>
+  <p>
+   Super Hold'Em is a variant of <a href="#games-texas">Texas Hold'Em</a>.
+   It is played in an identical manner, but instead of two
+   <a href="#gloss-hole">hole cards</a> each player has three.
+   The game is similar to <a href="#game-pineapple">Pineapple</a> and
+   <a href="#game-crazy">Crazy Pineapple</a>, where players start with
+   three cards and discard one at some point in the game.
+  </p>
+  <h3 id="games-5draw">Five Card Draw</h3>
+  <h3 id="game-pineapple">Pineapple</h3>
+  <p>
+   Pineapple is a variant of <a href="#games-texas">Texas Hold'Em</a>.
+   Each player starts with three <a href="#gloss-hole">hole cards</a> instead
+   of two, and chooses one to discard before the first betting round.
+  </p>
+  <h3 id="games-crazy">Crazy Pineapple</h3>
+  <p>
+   Crazy pineapple is a variant of <a href="#games-pineapple">Pineapple</a>.
+   As in Pineapple, each player starts with three <a href="#gloss-hole">hold cards</a>,
+   but they keep all three cards until after the <a href="#gloss-flop">flop</a>; after
+   which they chose one to discard.
+  </p>
+  </div>
+ </body>
+</html>
